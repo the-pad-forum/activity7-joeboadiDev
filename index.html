@@ -3,9 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <title>Joe Boadi Orion -Portfolio</title>
 </head>
 <body>
-  <h1>Hello World!!!</h1>
+  <!--Navigation panel-->
+  <nav class="navigation-bar">
+    <img class="logo-pic" src="/assets/img/title-picture.jpg" alt="logo">
+    <ul class="main-list">
+      <li class="list-items"><a href="#home">Home</a></li>
+      <li class="list-items"><a href="#about">About</a></li>
+      <li class="list-items"><a href="#project">Projects</a></li>
+      <li class="list-items"><a href="#contact">Contacts</a></li>
+    </ul>
+  </nav>
+
+  <!--Main body content-->
+  <div class="container" id="page-intro">
+
+    <header>
+      <h1>Hello, the portfolio,</h1>
+      <p>
+        <h3 id="i-am">I am</h3><h2><span>Joe Boadi Orion,</span>
+          <div class="image-container">
+            <img class="portfolio-img" src="/assets/img/main-portfolio.jpg" alt="">
+          </div>
+        A software developer driven by curiosity and creativity...</h2>
+      </p>
+      <button class="hire-btn" id="portfolio-btn" onclick="hireMe()">Hire me</button>
+    </header>
+
+    <p>
+      <h3>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt, consectetur commodi consequatur.
+      </h3>
+    </p>
+
+    <!--Content body-->
+    <div class="body-content" id="home">
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eaque harum culpa facilis dignissimos obcaecati dolorem, a, delectus, tenetur alias praesentium impedit sint esse temporibus. Accusamus in laborum nulla ab laboriosam.
+      </p>
+    </div>
+
+    <div class="body-content" id="about">
+      <h3 class="div-content-heading">About</h3>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum cumque at quam quod itaque magnam nam perspiciatis temporibus excepturi, placeat, in doloremque eos molestias voluptate, pariatur ab amet fugit. Accusamus.
+      </p>
+    </div>
+
+    <div class="body-content" id="projects">
+      <h3 class="div-content-heading">Projects</h3>
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vero illum delectus quam praesentium officiis odit hic, eos in excepturi illo, voluptate molestias quidem officia commodi distinctio consequatur dolorem necessitatibus? Corporis!
+      </p>
+    </div>
+
+    <!--Contact form and buttons-->
+    <div class="body-content" id="contact">
+      <h3 class="div-content-heading">Contacts</h3>
+      <p>Get in touch here <button class="hire-btn" onclick="hireMe()">Hire me</button></p>
+      <div>
+        <form action="#post" class="form">
+          <label for="name">Full Name/Organisation name:</label>
+          <input id="full-name" type="text" name="name" class="input-credential" placeholder="Name...">
+          <label for="email">Email:</label>
+          <input type="email" name="email" class="input-credential" placeholder="myEmail@organisation.com">
+          <label for="message-body">Message: </label>
+          <textarea name="message-body" id="message-content" cols="30" rows="7" placeholder="Let hear you.."></textarea>
+          <input class="submit-btn" type="button" value="Ready to Collaborate" placeholder="#" onclick="sendEmail()">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <small>
+      &copy; 2023 Joe Boadi Orion All Rights Reserved.
+    </small>
+  </footer>
+
+  <script src="/js/app.js"></script>
 </body>
 </html>
