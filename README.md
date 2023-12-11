@@ -12,7 +12,7 @@ Welcome to my portfolio website! This project showcases my skills, and projects,
 
 This portfolio is deployed on [Vercel](https://vercel.com/), a cloud platform for static sites and Serverless Functions.
 
-[![Deploy with Vercel] (https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/your-username/your-portfolio-repo)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/your-username/your-portfolio-repo)
 
 ## Features
 
