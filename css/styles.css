@@ -22,17 +22,17 @@ div{
 }
 
 #quiz-container{
-  background-color: aliceblue;
+  background: linear-gradient(to bottom, #3498db, #ecf0f1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   min-height: 457.6px;
   margin: 3rem auto;
-  width: 80%;
   max-width: 600px;
   padding: 2rem;
-  zoom: 1;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   color: #00091a;
+  zoom: 1;
+  width: 80%;
 }
 
 #quiz-content{
@@ -43,6 +43,55 @@ div{
   margin-top: 1rem;
   padding:1rem 2rem;
 }
+
+#quiz-start-text{
+  font-size: 1rem;
+  color:#333;
+  padding: 1.5rem 2rem;
+}
+
+#quiz-timer{
+  background-color: #eee;
+  width: 60px;
+  height: 40px;
+  margin: .5rem auto;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+#progress{
+  height: 48px;
+  padding: 8px;
+}
+
+#next-question{
+  border-radius: 1.8rem;
+  margin-top:3rem ;
+  padding: .8rem 2rem;
+}
+
+#question{
+  font-size: 1.35rem;
+  height: 80px;
+}
+
+#options{
+  height: 125px;
+}
+
+#options button{
+  position: relative;
+}
+
+
+
+
+
+
+
+
 
 
 
