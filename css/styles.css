@@ -7,9 +7,8 @@
 
 body{
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #00091a;
+  background-color: #f4f4f4;
   height: 100%;
-  color: white;
 }
 
 /*All Div tags*/
@@ -22,7 +21,7 @@ div{
 }
 
 #quiz-container{
-  background: linear-gradient(to bottom, #3498db, #ecf0f1);
+  background-color: #fff;;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   min-height: 457.6px;
@@ -30,7 +29,7 @@ div{
   max-width: 600px;
   padding: 2rem;
   border-radius: 8px;
-  color: #00091a;
+  /*color: #00091a;*/
   zoom: 1;
   width: 80%;
 }
@@ -85,15 +84,106 @@ div{
   position: relative;
 }
 
+.selected-answer, .selected-answer:active, .selected-answer:hover{
+  background-color: #0bdcf7;
+  border: 1px solid #0bdcf7;
+  color: #000;
+}
 
+.tooltip{
+  visibility: hidden;
+  width: auto;
+  font-size: 1rem;
+  background-color: #eee;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
 
+.show-tooltip{
+  visibility: visible;
+  opacity: 1;
+}
 
+.question-review{
+  margin-top: 3rem;
+  padding: 0 1rem;
+  text-align: left;
+}
 
+.review-container{
+  margin-top: 44rem;
+}
 
+.review-title{
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
 
+.feedback{
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  padding: 0 3.5rem;
+}
 
+#retry-quiz{
+  position: absolute;
+  top: 11rem;
+  left: calc(50% - 190px);
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin:4px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition-duration:0.4s;
+}
 
+#retry-quiz:hover{
+  background-color: #45a049;
+}
 
+#download-pdf{
+  position: absolute;
+  top: 11rem;
+  left: calc(50% - 40px);
+  background-color: #f44336;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  transition-duration: 0.4s;
+}
+
+#download-pdf:hover{
+  background-color: #d32f2d;
+
+}
+
+#resultChart{
+  position:absolute;
+  top: 14.8rem;
+  left:calc(600px - 100vw)
+}
 
 /*Footer style*/
 .footer{
