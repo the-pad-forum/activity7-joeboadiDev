@@ -6,8 +6,6 @@ let timeForQuestion = 30  // in seconds for each
 let startTime
 let totalTime = 300 // Total time for quiz(300s = 5 minutes)
 let quizTimeInterval
-
-
 /*
 *  Declare a function to start quiz tiner
 */
@@ -23,7 +21,6 @@ const startQuizTimer = () => {
     }
   }, 1000)
 }
-
 /*
 * Function to update timer
 */
@@ -32,7 +29,6 @@ const updateTimerDisplay = (timeRemaining) => {
   const seconds = timeRemaining % 60
   document.getElementById('quiz-timer').textContent = `${minutes}: ${seconds < 10 ? '0':""}${seconds}`
 }
-
 /*
 * Function to reset timer 
 */
@@ -42,7 +38,6 @@ const resetTimer = () => {
     timeInterval = null
   }
 }
-
 /*
 * Function to start timer
 */
@@ -64,7 +59,6 @@ const startTimer = (duration, display) => {
     }
   }, 1000)
 }
-
 /*
 * Function to format the time.
 */
@@ -76,4 +70,113 @@ const formatTime = (time) =>{
   seconds = seconds < 10 ? '0' + seconds : seconds
 
   return minutes + ':' + seconds
+}
+/*
+* Function to finish Quiz
+*/
+const finishQuiz = () => {
+  clearInterval(quizTimeInterval)
+
+  // Time duration user spent taking quiz
+  const endTime = new Date()
+  const timeTaken = new Date(endTime - startTime)
+  const minutes = timeTaken.getUTCMinutes()
+  const seconds = timeTaken.getUTCSeconds()
+
+  const correctAnswerCount = questions.filter(
+    (q, index) => userAnswers[index] === q.answer).length
+
+    const incorrectAnswersCount = questions.length.correctAnswerCount
+
+    resetTimer()
+
+    const finalScore = calculateScore()
+    // TODO: Create a function to calculate score
+
+    const scorePercentage = (finalScore / questions.length) * 100
+
+    // Tag to display the result of Quiz
+    let resultsHTML = `
+      <h1>Simple Quiz App  Results</h1>
+      <p>
+        Final Score: ${finalScore} / ${questions.length}
+        (${scorePercentage.toFixed(2)}%)
+      </p>
+
+      <div class="review-container">
+      <h3 class="review-title">Performance Review</h3>
+    `
+    // Generate personalized feedback
+    let feedback = ''
+    if(scorePercentage >= 80){
+      feedback = 'Excellent work! Keep it up!'
+    }else if(scorePercentage >= 50){
+      feedback = 'Good effort! Review the incorrect answers to improve further.'
+    }else{
+      feedback ='Looks you might need some practice. \n Review the material and try retaking the quiz'
+    }
+
+    resultsHTML += `<p class="feedback">${feedback}</p>`
+
+    // Compile results for each question
+    questions.forEach((question, index) => {
+      const userAnswers = userAnswers[index]
+      const isCorrect = userAnswers === question.answer
+      const correctClass = isCorrect ? 'correct-answer' : 'incorrect-answer'
+
+      resultsHTML = `
+        <div class="question-review ${correctClass}">
+          <p>Question ${index + 1}: ${question.question}</p>
+          <p>Your answer: ${userAnswers || 'No answer'}</p>
+          <p>${isCorrect ? 'Correct' : 'Incorrect'}</p>
+        </div>  
+      `
+    })
+
+    resultsHTML += `
+      <button id="retry-quiz" onclick="location.reload();">
+          Retry Quiz
+      </button>
+      `
+
+    resultsHTML += `
+      <button id="download-pdf" onclick="generatePDF();">
+          Download PDF Report
+      </button>
+    `
+
+    // Display the Results
+    document.getElementById('quis-container').innerHTML = resultsHTML
+
+    // Data for Chart
+    const correctAnswers = questions.filter(
+      (q, index) => userAnswers[index] === q.answer
+    ).length
+
+    const incorrectAnswers = questions.length - correctAnswers
+
+    // Canvas element for Chart
+    resultsHTML += `<canvas id="resultsChart" width="400" height="400"><canvas/>
+                    </div>` // End of "Review Container" div
+
+  document.getElementById('quiz-container').innerHTML = resultsHTML
+
+  // Generate Chart
+  const ctx = document.getElementById('resultsChart').getContext('2d')
+  const resultsChart = new Chart(ctx,{
+    type: 'pie',
+    data:{
+      labels:['Correct Answers', 'Incorrect Answers'],
+      datasets:[
+        {
+          label: 'Quiz Results',
+          data: [correctAnswerCount, incorrectAnswersCount],
+          backgroundColor:[
+            'rgba(0, 128, 0, 0.7)', // Green => Correct
+            'rgba(255, 0, 0, 0.7)', // Red => Incorrect
+          ],
+        },
+      ],
+    },
+  })
 }
