@@ -84,6 +84,12 @@ div{
   position: relative;
 }
 
+/*Style for selected option*/
+#options button.selected-option-color {
+  background-color: #04b4cb; 
+  color: #000;
+}
+
 .selected-answer, .selected-answer:active, .selected-answer:hover{
   background-color: #0bdcf7;
   border: 1px solid #0bdcf7;
