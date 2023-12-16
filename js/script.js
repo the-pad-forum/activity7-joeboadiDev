@@ -180,3 +180,63 @@ const finishQuiz = () => {
     },
   })
 }
+
+/*
+ * Function to move question 
+ */
+const goToNextQuestion = () => {
+  currentQuestionIndex++
+  if(currentQuestionIndex < questions.length) loadQuestion(currentQuestionIndex)
+  finishQuiz()
+}
+
+/**
+ * Function to handle selected option
+ */
+const handleOptionSelect = (selectedOption, button) => {
+  // Create Tooltip
+  let tooltip = document.createElement('span')
+  tooltip.classList.add('tooltip')
+  tooltip.textContent = 'Selected'
+  // Method to store user's answer.
+  userAnswers[currentQuestionIndex] = selectedOption
+  // A method to remove "Selected answer" from the options
+  const options = document.querySelectorAll('#options button')
+  options.forEach((opt) => opt.classList.remove('selected-answer'))
+  // Adding a tooltip to clicked button
+  button.appendChild(tooltip)
+  // Adding "selected answer" class to clicked button
+  button.classList.add('selected-answer')
+  // Show Tooltip
+  setTimeout(() => {
+    tooltip.classList.add('show-tooltip')
+  }, 100)
+  // Remove Tooltip after some time
+  setTimeout(() => {
+    tooltip.remove()
+  }, 1000) // Adjusting time duration
+
+  // Check for last question
+  if(currentQuestionIndex === questions.length - 1){
+    finishQuiz()
+  }else{
+    // Enable for next question if user is not done
+    document.getElementById('next-question').disabled = false
+  }
+
+  // Visual feedback for selection
+  button.classList.add('selected-answer', 'selected-option-color');
+}
+
+/**
+ * Function to Calculate the Score
+ */
+const calculateScore = () => {
+  let score = 0
+  userAnswers.forEach((answer, index) => {
+    if(answer === questions[index].answer) {
+      score++
+    }
+  })
+  return score
+}
