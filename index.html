@@ -4,17 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- External libraries and Stylesheets-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link rel="stylesheet" href="./css/styles.css">
   <title>Simple Quiz App</title>
+</head>
 <body>
   <!-- Quiz Container -->
   <div id="quiz-container">
-    <h1>Simple  Quiz App</h1>
-    <button class="btn btn-primary" id="quiz-start-btn">Start Quiz</button>
+    <h1>Simple Quiz App</h1>
+    <button class="btn btn-primary" id="quiz-start-btn" onclick="startQuiz()">Start Quiz</button>
     <p>
       <b>Time</b>: 5 minutes
       <b>Category</b>: Current Affair <br>
@@ -22,21 +23,20 @@
       along with options to either retake the quiz or download your results as a PDF report
     </p>
     <!---Content of quiz materials-->
-    <div class="quiz-content">
+    <div class="quiz-content" id="quiz-content">
       <div id="quiz-timer"></div>
       <div id="progress"></div>
       <div id="question"></div>
       <div id="options"></div>
-      <button id="next-question" class="btn btn-success btn-lg">
+      <button id="next-question" class="btn btn-success btn-lg" onclick="nextQuestion()">
         Next <i class="fas fa-angle-double-right"></i>
       </button>
     </div>
   </div>
-
+  <!--Footer-->
   <div class="footer">
     &copy;2023 joeboadi1@gmail.com All Rights Reserved
   </div>
-
   <!--JS Scripts-->
   <script src="./js/data.js"></script>
   <script src="./js/script.js"></script>
