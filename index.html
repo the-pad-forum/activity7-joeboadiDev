@@ -15,7 +15,7 @@
   <!-- Quiz Container -->
   <div id="quiz-container">
     <h1>Simple Quiz App</h1>
-    <button class="btn btn-primary" id="quiz-start-btn" onclick="startQuiz()">Start Quiz</button>
+    <button class="btn btn-primary" id="quiz-start-btn" onclick="startQuizTimer()">Start Quiz</button>
     <p>
       <b>Time</b>: 5 minutes
       <b>Category</b>: Current Affair <br>
@@ -28,7 +28,7 @@
       <div id="progress"></div>
       <div id="question"></div>
       <div id="options"></div>
-      <button id="next-question" class="btn btn-success btn-lg" onclick="nextQuestion()">
+      <button id="next-question" class="btn btn-success btn-lg" onclick="gotToNextQuestion()">
         Next <i class="fas fa-angle-double-right"></i>
       </button>
     </div>
