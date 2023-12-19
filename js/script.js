@@ -1,11 +1,21 @@
 /*Declaration of variables */
-let currentQuestionIndex = 0
-let userAnswers = [] // to store user's answers
-let timeInterval
-let timeForQuestion = 30  // in seconds for each
-let startTime
+let currentQuestionIndex = 0;
+let userAnswers = []; // to store user's answers
+let timerInterval;
+let timeForQuestion = 30; // in seconds for each
+let startTime;
 let totalTime = 300 // Total time for quiz(300s = 5 minutes)
-let quizTimeInterval
+let quizTimeInterval;
+
+/*
+* Function to update timer
+*/
+const updateTimerDisplay = (timeRemaining) => {
+  const minutes = Math.floor(timeRemaining/60)
+  const seconds = timeRemaining % 60
+  document.getElementById('quiz-timer').textContent = `${minutes}: ${seconds < 10 ? '0':''}${seconds}`
+}
+
 /*
 *  Declare a function to start quiz tiner
 */
@@ -14,28 +24,21 @@ const startQuizTimer = () => {
   quizTimeInterval = setInterval(() =>{
     if(timeRemaining <= 0){
       clearInterval(quizTimeInterval)
-      finishQuiz();
+      finishQuiz(); // Automatically finish the quiz
     }else{
       timeRemaining--
       updateTimerDisplay(timeRemaining)
     }
   }, 1000)
 }
-/*
-* Function to update timer
-*/
-  const updateTimerDisplay = (timeRemaining) => {
-  const minutes = Math.floor(timeRemaining/60)
-  const seconds = timeRemaining % 60
-  document.getElementById('quiz-timer').textContent = `${minutes}: ${seconds < 10 ? '0':""}${seconds}`
-}
+
 /*
 * Function to reset timer 
 */
 const resetTimer = () => {
-  if(timeInterval){
-    clearInterval(timeInterval)
-    timeInterval = null
+  if(timerInterval){
+    clearInterval(timerInterval)
+    timerInterval = null
   }
 }
 /*
@@ -45,13 +48,12 @@ const startTimer = (duration, display) => {
   let timer = duration
   display.textContent = formatTime(timer)
   resetTimer(); // Clear any existing timer.
-
   timeInterval = setInterval(function(){
     timer--
     display.textContent = formatTime(timer)
     if(timer <= 0){
       clearInterval(timeInterval)
-      if(currentQuestionIndex < currentQuestionIndex.length - 1){
+      if(currentQuestionIndex < questions.length - 1){
         goToNextQuestion()
       }else{
         finishQuiz()
@@ -71,6 +73,7 @@ const formatTime = (time) =>{
 
   return minutes + ':' + seconds
 }
+
 /*
 * Function to finish Quiz
 */
@@ -84,16 +87,16 @@ const finishQuiz = () => {
   const seconds = timeTaken.getUTCSeconds()
 
   const correctAnswerCount = questions.filter(
-    (q, index) => userAnswer[index] === q.answer).length
+    (q, index) => userAnswers[index] === q.answer).length
 
-    const incorrectAnswersCount = questions.length.correctAnswerCount
+    const incorrectAnswersCount = questions.length - correctAnswerCount
 
     resetTimer()
 
     const finalScore = calculateScore()
     // TODO: Create a function to calculate score
 
-    const scorePercentage = (finalScore / questions.length) * 100
+    const scorePercentage = (finalScore / questions.length) * 100;
 
     // Tag to display the result of Quiz
     let resultsHTML = `
@@ -120,14 +123,14 @@ const finishQuiz = () => {
 
     // Compile results for each question
     questions.forEach((question, index) => {
-      const userAnswers = userAnswers[index]
-      const isCorrect = userAnswers === question.answer
+      const userAnswer = userAnswers[index]
+      const isCorrect = userAnswer === question.answer
       const correctClass = isCorrect ? 'correct-answer' : 'incorrect-answer'
 
       resultsHTML += `
         <div class="question-review ${correctClass}">
           <p>Question ${index + 1}: ${question.question}</p>
-          <p>Your answer: ${userAnswers || 'No answer'}</p>
+          <p>Your answer: ${userAnswer || 'No answer'}</p>
           <p>${isCorrect ? 'Correct' : 'Incorrect'}</p>
         </div>  
       `
@@ -150,7 +153,7 @@ const finishQuiz = () => {
 
     // Data for Chart
     const correctAnswers = questions.filter(
-      (q, index) => userAnswer[index] === q.answer
+      (q, index) => userAnswers[index] === q.answer
     ).length
 
     const incorrectAnswers = questions.length - correctAnswers
@@ -164,7 +167,7 @@ const finishQuiz = () => {
   // Generate Chart
   const ctx = document.getElementById('resultsChart').getContext('2d')
   const resultsChart = new Chart(ctx,{
-    type: 'pie',
+    type: 'pie', // or bar 
     data:{
       labels:['Correct Answers', 'Incorrect Answers'],
       datasets:[
@@ -186,8 +189,11 @@ const finishQuiz = () => {
  */
 const goToNextQuestion = () => {
   currentQuestionIndex++
-  if(currentQuestionIndex < questions.length) loadQuestion(currentQuestionIndex)
-  finishQuiz()
+  if(currentQuestionIndex < questions.length){
+    loadQuestion(currentQuestionIndex)
+  }else{
+    finishQuiz()
+  }
 }
 
 /**
@@ -199,7 +205,7 @@ const handleOptionSelect = (selectedOption, button) => {
   tooltip.classList.add('tooltip')
   tooltip.textContent = 'Selected'
   // Method to store user's answer.
-  userAnswer[currentQuestionIndex] = selectedOption
+  userAnswers[currentQuestionIndex] = selectedOption
   // A method to remove "Selected answer" from the options
   const options = document.querySelectorAll('#options button')
   options.forEach((opt) => opt.classList.remove('selected-answer'))
@@ -226,6 +232,8 @@ const handleOptionSelect = (selectedOption, button) => {
 
   // Visual feedback for selection
   button.classList.add('selected-answer', 'selected-option-color');
+
+  // TODO: Visual feedback for selection => changing color of selected option.
 }
 
 /**
@@ -233,8 +241,9 @@ const handleOptionSelect = (selectedOption, button) => {
  */
 const calculateScore = () => {
   let score = 0
-  userAnswer.forEach((answer, index) => {
-    if(answer === questions[index].answer) {
+  userAnswers.forEach((answer, index) => {
+    const question = questions[index]
+    if(question && question.answer !== undefined && answer === question.answer) {
       score++
     }
   })
@@ -243,6 +252,8 @@ const calculateScore = () => {
 
 /*
 * Function to load question
+
+* @param {number} questionIndex
 */
 const loadQuestion = (questionIndex) => {
   if(questionIndex === 0){
@@ -257,26 +268,24 @@ const loadQuestion = (questionIndex) => {
 
   // Update progress
   progressEL.innerText = `Question ${questionIndex + 1} of ${questions.length}`
-  // Load first question
-  loadQuestion(currentQuestionIndex)
   // Set the question text
   questionEL.innerText = questions[questionIndex].question
   // Clear previous options
   optionsEL.innerHTML = ''
 
 // Load options, Add eventListeners
-questions[questionIndex].options.forEach((option) =>{
-  const button = document.createElement('button')
-  button.innerText = option
-  button.classList.add('btn', 'btn-primary', 'btn-lg', 'my-2') //Bootsrap classes
+  questions[questionIndex].options.forEach((option) =>{
+    const button = document.createElement('button')
+    button.innerText = option
+    button.classList.add('btn', 'btn-primary', 'btn-lg', 'my-2')
 
-  button.addEventListener('click', () => 
-    handleOptionSelect(option, button))
-    optionsEL.appendChild(button)
+    button.addEventListener('click', () => 
+      handleOptionSelect(option, button))
+      optionsEL.appendChild(button)
   })
 
 // Disable the Next Question button an option is selected
-document.getElementById('next-question').disabled = true
+  document.getElementById('next-question').disabled = true
 
 // Start or reset the timer
   if(questionIndex < questions.length - 1){
@@ -288,7 +297,7 @@ document.getElementById('next-question').disabled = true
  *  Function to generate the PDF
  */
 const generatePDF = () => {
-  const{jsPDF} = window.jsPDF
+  const{jsPDF} = window.jspdf
   const _document = new jsPDF()
 
   let yPos = 20; //Postion for quiz review
@@ -308,13 +317,14 @@ const generatePDF = () => {
   * Add final score
   */
   const finalScore = calculateScore()
-  const scorePercentage = `Final Score: ${finalScore}/${questions.length}(${scorePercentage.toFixed(2)}%)`
+  const scorePercentage = (finalScore / questions/length) * 100
+  const scoreSummary = `Final Score: ${finalScore}/${questions.length}(${scorePercentage.toFixed(2)}%)`
 
 
   _document.setFontSize(11) // Decrease font size of final score date
-  _document.text(scorePercentage, 20, (yPos += 7)) // Add score summary
+  _document.text(scoreSummary, 20, (yPos += 7)) // Add score summary
   _document.text(`Date: ${quizDate}`, 75, yPos) // Add Date on the same line as score summary
-  _document.setFontSize(12) // Reset fonnt size to default
+  _document.setFontSize(12) // Reset font size to default
   _document.line(20,32,190,31) //Add horizontal line
   _document.text("", 20, (yPos += 10)) // Add empty space after horizontal
 
@@ -322,18 +332,23 @@ const generatePDF = () => {
   * Add detailed question review
   */
  questions.forEach((question, index) => {
-  const userAnswers = userAnswers[index] || 'No Answer'
+  const userAnswer = userAnswers[index] || 'No Answer'
   const correctAnswer = question.answer
-  const isCorrect = userAnswers === correctAnswers
+  const isCorrect = userAnswer === correctAnswer
   const questionNumber = `Q${index + 1}`
   const questionText = `${question.question}`
-  const answerText = `Your Answer: ${userAnswers}(${isCorrect ? 'Correct': 'Incorrect'})`
+  const answerText = `Your Answer: ${userAnswer}(${isCorrect ? 'Correct': 'Incorrect'})`
+
+  _document.setFont('helvetica', 'bold')
+  _document.text(questionNumber, 20, (yPos += 7))
+  _document.setFont('helvetica', 'normal')
+  _document.text(`${questionText}`, 30, yPos)
 
   _document.setTextColor(100, 102, 104)
   _document.text(answerText, 30, (yPos += 5))
   _document.setTextColor(0, 0, 0)
 
-  yPos += 3
+  yPos += 3 // Adjust for next question
   if(yPos > 270){
     _document.addPage()
     yPos = 20
@@ -351,8 +366,8 @@ const generatePDF = () => {
   _document.text('Visualization', 23, yPos + 20, {angle:90}) // Add vertical effect
   _document.rect(25 + correctAnswers * 3, yPos, incorrectAnswers * 3, 20) //Bar for incorrect answers
   _document.rect(25, yPos, correctAnswers * 3, 20, 'F') // Bar for correct answers
-  _document.text(`Correct[filled]: ${correctAnswers}`, 25, (yPos += 24))
-  _document.text(`Incorrect [no fill]:${incorrectAnswers}`, 55, (yPos))
+  _document.text(`Correct[ filled ]: ${correctAnswers}`, 25, (yPos += 24))
+  _document.text(`Incorrect [ no fill ]:${incorrectAnswers}`, 55, (yPos))
   _document.setFontSize(10)
 
   /*
@@ -370,11 +385,12 @@ const generatePDF = () => {
   _document.text(feedback, 25, (yPos += 5)) //Add feedback
   _document.line(20, 270, 190, 270) //Add horizontal
 
+  // Save the PDF as "Quiz Report.pdf"
   _document.save('Quiz Report.pdf')
 }
 
 // Add eventListener for next question
-document.getElementById('next-question').addEventListener('click', () => {
+  document.getElementById('next-question').addEventListener('click', () => {
   currentQuestionIndex++
   if(currentQuestionIndex < questions.length){
     loadQuestion(currentQuestionIndex)
@@ -383,14 +399,14 @@ document.getElementById('next-question').addEventListener('click', () => {
   }
 })
 
-// Start button interaction and response.
-document.getElementById('quiz-start-btn')
-  .addEventListener('click', () =>{
-    startQuizTimer() //Timer to start when quiz starts
-    document.getElementById('quiz-content').style.display = 'block' //Display quiz
-    document.getElementById('quiz-start-text').style.display = 'none' // Hide start button
-    loadQuestion(0) //First question load
-    this.style.display = 'none'// HIde start button
-  })
 
-  loadQuestion(questionIndex)
+document.getElementById('quiz-start-btn').addEventListener('click', function () {
+  startQuizTimer(); // Timer to start when the quiz starts
+  document.getElementById('quiz-content').style.display = 'block'; // Display quiz
+  document.getElementById('quiz-start-text').style.display = 'none'; // Hide start button
+  loadQuestion(0); // First question load
+  this.style.display = 'none'; // Hide start button
+});
+
+// Load first question
+loadQuestion(0)
