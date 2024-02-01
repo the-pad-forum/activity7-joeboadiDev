@@ -33,7 +33,8 @@ function startQuizTimer() {
 function updateTimerDisplay(timeRemaining) {
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
-  document.getElementById('quiz-timer').textContent = `${minutes}:${
+  document.getElementById('quiz-timer').textContent =
+  `${minutes}:${
     seconds < 10 ? '0' : ''
   }${seconds}`;
 }
@@ -98,6 +99,12 @@ function formatTime(time) {
  * -----------------------------------------------------------------------------
  */
 function finishQuiz() {
+
+  const progressBar = document.getElementById('progress-bar');
+
+  // Set the progress bar to 100%
+  progressBar.style.width = '100%';
+  progressBar.setAttribute('aria-valuenow', 100);
   clearInterval(quizTimerInterval);
 
   const endTime = new Date();
@@ -222,13 +229,39 @@ function handleOptionSelect(selectedOption, button) {
 
   // Store user's answer
   userAnswers[currentQuestionIndex] = selectedOption;
+   
 
-  // Remove 'selected-answer' class from all options
+
+  // Toggle 'selected-answer' class for the clicked button
+  button.classList.toggle('selected-answer');
+
+  // Remove 'selected-answer' class and reset background color for other options
   const options = document.querySelectorAll('#options button');
-  options.forEach((opt) => opt.classList.remove('selected-answer'));
+  options.forEach((opt) => {
+    if (opt !== button) {
+      opt.classList.remove('selected-answer');
+      opt.style.backgroundColor = ''; // Reset background color for other options
+      opt.style.border = '1px solid #007bff'; // Set border color to Bootstrap primary color
 
+    }
+  });
+
+  
   // Add tooltip to clicked button
   button.appendChild(tooltip);
+  const existingIcons = document.querySelectorAll('.fa-check-circle');
+  existingIcons.forEach((icon) => icon.remove());
+  // Change the background color of the selected button to green if it is selected
+  button.style.backgroundColor = button.classList.contains('selected-answer') ? '#05636f31' : '';
+
+  // Remove border for the selected button
+  button.style.border = button.classList.contains('selected-answer') ? '1px solid #05636f31' : '1px solid #007bff';
+ const checkIcon = document.createElement('i');
+  checkIcon.classList.add('fas', 'fa-check-circle');
+  checkIcon.style.color = '#227724'; // Set the color
+  checkIcon.style.position = 'absolute'; // Set position to absolute
+  checkIcon.style.right = '15px';
+  button.appendChild(checkIcon);
 
   // Add 'selected-answer' class to clicked button
   button.classList.add('selected-answer');
@@ -253,6 +286,7 @@ function handleOptionSelect(selectedOption, button) {
 
   // Provide visual feedback for selection (optional)
   // For example, change the color of the selected button
+ 
 }
 
 /** 
@@ -277,20 +311,28 @@ function calculateScore() {
  * @param {number} questionIndex 
  */
 function loadQuestion(questionIndex) {
-  if (questionIndex === 0) {
-    // startTime = new Date(); // Start timer on the first question
-    // startQuizTimer();
-  }
+  // if (questionIndex === 0) {
+  //   // startTime = new Date(); // Start timer on the first question
+  //   // startQuizTimer();
+  // }
+ 
+  const progressBar = document.getElementById('progress-bar');
+  const progressPercentage = ((questionIndex + 1) / questions.length) * 100;
+
+  // Update the progress bar width
+  progressBar.style.width = `${progressPercentage}%`;
+  progressBar.setAttribute('aria-valuenow', progressPercentage);
 
   const questionEl = document.getElementById('question');
   const optionsEl = document.getElementById('options');
   const progressEl = document.getElementById('progress');
 
   // Update progress
-  progressEl.innerText = `Question ${questionIndex + 1} of ${questions.length}`;
+  progressEl.innerText = `${questionIndex + 1} of ${questions.length} Questions`;
 
   // Set the question text
-  questionEl.innerText = questions[questionIndex].question;
+  questionEl.innerHTML = ` <strong>${questionIndex + 1}. ${questions[questionIndex].question} <strong>`;
+
 
   // Clear previous options
   optionsEl.innerHTML = '';
@@ -299,7 +341,7 @@ function loadQuestion(questionIndex) {
   questions[questionIndex].options.forEach((option) => {
     const button = document.createElement('button');
     button.innerText = option;
-    button.classList.add('btn', 'btn-primary', 'btn-lg', 'my-2'); // Bootstrap classes
+    button.classList.add('btn', 'btn-outline-primary', 'btn-lg', 'my-2',); // Bootstrap classes
 
     button.addEventListener('click', () => handleOptionSelect(option, button));
     optionsEl.appendChild(button);
@@ -329,13 +371,14 @@ function generatePDF() {
    * Add quiz information
    * --------------------
    */
-  const quizTitle = 'Simple Quiz App Report'; // Replace with your quiz title
+  const quizTitle = 'Simple Quiz App Report'; // Replace with your quiz titl
   const quizDate = new Date().toLocaleString(); // Current date and time
 
   doc.setFontSize(24); // Increase font size for title
   doc.setFont('helvetica', 'bold');
   doc.text(quizTitle, 20, yPos);
   doc.setFont('helvetica', 'normal');
+ 
 
   /**
    * Add final score and date
@@ -351,8 +394,11 @@ function generatePDF() {
   doc.text(scoreSummary, 20, (yPos += 7)); // Add score summary
   doc.text(`Date: ${quizDate}`, 75, yPos); // Add date on the same line as score summary
   doc.setFontSize(12); // Reset font size to default
+  const categoryText = 'Category: Current Affairs'; // Replace with the actual category
+  doc.text(categoryText, 135, yPos);
   doc.line(20, 31, 190, 31); // Add horizontal line
   doc.text('', 20, (yPos += 10)); // Add empty space after horizontal line
+ 
 
   /**
    * Add detailed question review
@@ -371,10 +417,18 @@ function generatePDF() {
     doc.text(questionNumber, 20, (yPos += 7));
     doc.setFont('helvetica', 'normal');
     doc.text(`${questionText}`, 30, yPos);
-
     doc.setTextColor(100, 102, 104);
+    
+    if (isCorrect) {
+      doc.setTextColor(0, 128, 0, 0.7); // Green for correct answer
+    } else {
+      doc.setTextColor(255, 0, 0, 0.7); // Red for incorrect answer
+    }
     doc.text(answerText, 30, (yPos += 5));
+    // Reset text color to default
     doc.setTextColor(0, 0, 0);
+  
+
     yPos += 3; // Adjust for next question
     if (yPos > 270) {
       // Ensure there's space for the next question or add a new page
@@ -444,7 +498,13 @@ document
     document.getElementById('quiz-start-text').style.display = 'none'; // Hide the start text
     loadQuestion(0); // Load the first question
     this.style.display = 'none'; // Hide the start button
-  });
+
+    const h1Element = document.querySelector('h1'); 
+      // Check if the element exists before attempting to hide it
+      if (h1Element) {
+        h1Element.style.display = 'none';  // Hide the h1 in quiz container
+      }
+        });
 
 
 
