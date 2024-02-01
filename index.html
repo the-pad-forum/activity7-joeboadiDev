@@ -11,8 +11,9 @@
   <title>Simple Quiz App</title>
 </head>
 <body>
+  
   <div id="quiz-container">
-    <h1 >Simple Quiz App</h1>
+    <h1>Simple Quiz App</h1>
     <button class="btn btn-primary" id="quiz-start-btn">Start Quiz</button>
     <p id="quiz-start-text">
       <b>Time</b>: 5 Minutes,
@@ -20,21 +21,39 @@
       Click the "Start Quiz" button to begin. Once you've completed it, you'll see your results, 
       along with options to either retake the quiz or download your results as a PDF report.</p>
 
+
     <div id="quiz-content">
-      <div id="quiz-timer"></div>
-      <div id="progress"></div>
+      <header>
+        <h2>Simple Quiz App</h2>
+        <div class="timer-container">
+          <p>Time Left</p> 
+          <div id="quiz-timer"></div>
+        </div>
+      </header>
+      <div class="container">
+      <div id="progress-bar-container">
+        <div id="progress-bar" class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      </div>
 
       <div id="question"></div>
       <div id="options"></div>
+
+      <div class="straightline"></div>
       
-      <button id="next-question" class="btn btn-success btn-lg">
-        Next <i class="fas fa-angle-double-right"></i>
-      </button>
+      <div class="bottom">
+        <div id="progress"></div>
+        <button id="next-question" class="btn btn-primary btn-lg">
+          Next <i class="fas fa-angle-double-right"></i>
+        </button>
+      </div>
 
     </div>
   </div>
+  
+
   <div class="footer">
-    © 2023 joeboadi1@gmail.com. All rights reserved
+    © 2024 joeboadi10@gmail.com. All rights reserved
   </div>
   <!-- Bootstrap JS and Popper.js -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
